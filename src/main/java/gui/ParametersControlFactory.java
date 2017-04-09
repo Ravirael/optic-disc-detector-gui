@@ -3,9 +3,7 @@ package gui;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by rames on 09.04.17.
- */
+
 public class ParametersControlFactory {
     List<ParameterControl> create() {
         return Arrays.asList(
@@ -13,8 +11,8 @@ public class ParametersControlFactory {
                 .setLabel("Min. radius")
                 .setName("--minRadius")
                 .setMin(0)
-                .setStep(0.005)
                 .setMax(1.0)
+                .setStep(0.005)
                 .setDefault(0.045)
                 .build(),
 

@@ -1,0 +1,64 @@
+[
+  {
+    "label" : "Min. radius",
+    "name" : "--minRadius",
+    "min" : 0,
+    "max" : 1.0,
+    "value" : 0.045,
+    "step" : 0.005
+  },
+
+  {
+    "label" : "Max. radius",
+    "name" : "--maxRadius",
+    "min" : 0,
+    "max" : 1.0,
+    "value" : 0.065,
+    "step" : 0.005
+  },
+
+  {
+    "label" : "Min. distance",
+    "name" : "--minDistance",
+    "min" : 0,
+    "max" : 1.0,
+    "value" : 0.14,
+    "step" : 0.005
+  },
+
+  {
+    "label" : "Canny threshold",
+    "name" : "--cannyThreshold",
+    "min" : 0,
+    "max" : 255,
+    "value" : 80,
+    "step" : 1
+  },
+
+  {
+    "label" : "Accumulator threshold",
+    "name" : "--accumulatorThreshold",
+    "min" : 0,
+    "max" : 1000000,
+    "value" : 4,
+    "step" : 1
+  },
+
+  {
+    "label" : "Blur size",
+    "name" : "--blurSize",
+    "min" : 0,
+    "max" : 1.0,
+    "value" : 0.05,
+    "step" : 0.005
+  },
+
+  {
+    "label" : "Blur sigma",
+    "name" : "--blurSigma",
+    "min" : 0,
+    "max" : 100,
+    "value" : 10,
+    "step" : 0.5
+  }
+]

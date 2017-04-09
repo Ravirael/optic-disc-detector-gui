@@ -5,10 +5,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml">
+<fx:root prefHeight="28.0" prefWidth="286.0" type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.112">
    <children>
-      <Label alignment="CENTER" prefHeight="27.0" prefWidth="124.0" text="Label" fx:id="label"/>
+      <Label fx:id="label" prefHeight="27.0" prefWidth="108.0" text="Label" />
       <Region prefHeight="28.0" prefWidth="48.0" />
-      <Spinner prefHeight="26.0" prefWidth="96.0" fx:id="spinner" />
+      <Spinner fx:id="spinner" editable="true" prefHeight="26.0" prefWidth="129.0" />
    </children>
 </fx:root>

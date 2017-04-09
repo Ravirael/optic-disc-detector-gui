@@ -26,7 +26,7 @@ class ParameterControlBuilder {
     }
 
     ParameterControlBuilder setMax(double max) {
-        this.min = min;
+        this.max = max;
         return this;
     }
 
