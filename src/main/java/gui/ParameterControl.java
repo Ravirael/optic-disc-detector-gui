@@ -18,10 +18,10 @@ public class ParameterControl extends HBox {
     @FXML
     private Label label;
 
-    public ParameterControl(SpinnerValueFactory valueFactory, String labelText, String parameterName) {
+    public ParameterControl(String labelText, String parameterName, SpinnerValueFactory valueFactory) {
         super();
         this.parameterName = parameterName;
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gui/ParameterControl.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ParameterControl.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {

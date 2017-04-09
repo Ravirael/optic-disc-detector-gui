@@ -42,8 +42,8 @@ public class MainWindowController implements Initializable {
         filePath = file.getAbsolutePath();
 
         try {
-            BufferedImage bufferedImage = ImageIO.read(file);
-            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+            final BufferedImage bufferedImage = ImageIO.read(file);
+            final Image image = SwingFXUtils.toFXImage(bufferedImage, null);
             imageView.setImage(image);
         } catch (IOException ex) {
         }
@@ -52,8 +52,8 @@ public class MainWindowController implements Initializable {
     @FXML
     private void processImage(final ActionEvent event) {
         try {
-            OpticDiscDetector detector = new OpticDiscDetectorProcess(new ArrayList<>(), executorService);
-            Future<DetectionResult> result = detector.detect(filePath);
+            final OpticDiscDetector detector = new OpticDiscDetectorProcess(new ArrayList<>(), executorService);
+            final Future<DetectionResult> result = detector.detect(filePath);
             result.get()
                     .image()
                     .map(i -> SwingFXUtils.toFXImage((BufferedImage)i, null))
@@ -70,6 +70,7 @@ public class MainWindowController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         //parametersList.getChildren().add(new ParameterControl(valueFactory));
+        parametersList.getChildren().addAll(new ParametersControlFactory().create());
     }
 
 

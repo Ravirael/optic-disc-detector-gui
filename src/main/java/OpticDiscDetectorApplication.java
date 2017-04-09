@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 public class OpticDiscDetectorApplication extends Application {
@@ -18,9 +19,8 @@ public class OpticDiscDetectorApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("gui/MainWindow.fxml"));
-
-        Scene scene = new Scene(root);
+        final Parent root = FXMLLoader.load(getClass().getResource("gui" + File.separator + "MainWindow.fxml"));
+        final Scene scene = new Scene(root);
 
         stage.setScene(scene);
         stage.show();

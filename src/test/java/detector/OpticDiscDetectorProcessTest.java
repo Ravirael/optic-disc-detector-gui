@@ -30,9 +30,9 @@ public class OpticDiscDetectorProcessTest {
     public void shouldProcessImageCorrectly() throws IOException, ExecutionException, InterruptedException {
         OpticDiscDetector detector = createDetector();
 
-        DetectionResult result = detector.detect(getClass().getResource("detector/test_image.jpg").getFile()).get();
+        DetectionResult result = detector.detect(getClass().getResource("test_image.jpg").getFile()).get();
 
-        Assert.assertFalse(result.error().isPresent());
+        Assert.assertFalse(result.error().orElse(""), result.error().isPresent());
         Assert.assertTrue(result.image().isPresent());
     }
 
