@@ -7,10 +7,10 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -30,20 +29,31 @@ import java.util.stream.Collectors;
 
 public class MainWindowController implements Initializable {
     private final ExecutorService executorService = Executors.newCachedThreadPool();
-    private final List<ParameterControl> parameterControl;
+    private List<ParameterControl> parameterControl;
 
     @FXML
     private Slider slider;
+
     @FXML
     private ImageView imageView;
 
     @FXML
     private VBox parametersView;
 
+    @FXML
+    private ScrollPane imageScrollPane;
+
     private String filePath;
 
     public MainWindowController() {
-        parameterControl = new ParametersControlFactory().create();
+        try {
+            parameterControl = new ParametersControlFactory(
+                    new File(getClass().getResource("parameters.json").getFile())
+            )
+                    .create();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -86,6 +96,8 @@ public class MainWindowController implements Initializable {
         final double scale = slider.getValue() / 100.0;
         System.out.println(scale);
 
+        //imageScrollPane.setScaleX(scale);
+        //imageScrollPane.setScaleY(scale);
         imageView.setScaleX(scale);
         imageView.setScaleY(scale);
     }

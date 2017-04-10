@@ -30,7 +30,7 @@ class ParameterControlBuilder {
         return this;
     }
 
-    ParameterControlBuilder setDefault(double def) {
+    ParameterControlBuilder setValue(double def) {
         this.value = def;
         return this;
     }

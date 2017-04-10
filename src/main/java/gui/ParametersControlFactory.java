@@ -1,42 +1,29 @@
 package gui;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class ParametersControlFactory {
-    List<ParameterControl> create() {
-        return Arrays.asList(
-                builder()
-                .setLabel("Min. radius")
-                .setName("--minRadius")
-                .setMin(0)
-                .setMax(1.0)
-                .setStep(0.005)
-                .setDefault(0.045)
-                .build(),
 
-                builder()
-                .setLabel("Max. radius")
-                .setName("--maxRadius")
-                .setMin(0.0)
-                .setMax(1.0)
-                .setStep(0.005)
-                .setDefault(0.065)
-                .build(),
+    private final File file;
 
-                builder()
-                .setLabel("Min. distance")
-                .setName("--minDistance")
-                .setMin(0.0)
-                .setMax(1.0)
-                .setStep(0.01)
-                .setDefault(0.14)
-                .build()
-        );
+    public ParametersControlFactory(File file) {
+        this.file = file;
     }
 
-    private ParameterControlBuilder builder() {
-        return new ParameterControlBuilder();
+    List<ParameterControl> create() throws IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final List<ParameterControlBuilder> builders =
+                Arrays.asList(
+                    objectMapper.readValue(file, ParameterControlBuilder[].class)
+                );
+
+        return builders.stream().map(b -> b.build()).collect(Collectors.toList());
     }
 }
