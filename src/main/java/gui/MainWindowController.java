@@ -7,6 +7,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
@@ -40,6 +41,9 @@ public class MainWindowController implements Initializable {
     @FXML
     private ScrollPane imageScrollPane;
 
+    @FXML
+    private ProgressIndicator progressIndicator;
+
     private String filePath;
 
     public MainWindowController() {
@@ -71,29 +75,39 @@ public class MainWindowController implements Initializable {
     @FXML
     private void processImage(final ActionEvent event) {
         try {
+            progressIndicator.setVisible(true);
             final OpticDiscDetector detector = new OpticDiscDetectorProcess(
                     parameterControl
                             .stream()
                             .map(c -> c.toProgramArgument())
                             .collect(Collectors.toList())
             );
-            final CompletableFuture<DetectionResult> result = CompletableFuture.supplyAsync(() -> detector.detect(filePath));
-            result.get()
-                    .image()
-                    .map(i -> SwingFXUtils.toFXImage((BufferedImage)i, null))
-                    .ifPresent(i -> imageView.setImage(i));
-            result.get().error().ifPresent(e -> System.out.println(e));
-        } catch (IOException | InterruptedException | ExecutionException e) {
+            
+            final CompletableFuture<DetectionResult> result = CompletableFuture
+                    .supplyAsync(() -> detector.detect(filePath));
+
+            result.thenAccept(
+                    detectionResult -> {
+                       detectionResult
+                                .image()
+                                .map(i -> SwingFXUtils.toFXImage((BufferedImage) i, null))
+                                .ifPresent(i -> imageView.setImage(i));
+                       detectionResult.error().ifPresent(e -> System.out.println(e));
+                       progressIndicator.setVisible(false);
+                    }
+            )
+            .exceptionally((ex) -> {
+                ex.printStackTrace();
+                return null;
+            });
+        } catch (IOException e) {
+            progressIndicator.setVisible(false);
             e.printStackTrace();
         }
     }
 
     private void zoomChanged() {
         final double scale = slider.getValue() / 100.0;
-        System.out.println(scale);
-
-        //imageScrollPane.setScaleX(scale);
-        //imageScrollPane.setScaleY(scale);
         imageView.setScaleX(scale);
         imageView.setScaleY(scale);
     }

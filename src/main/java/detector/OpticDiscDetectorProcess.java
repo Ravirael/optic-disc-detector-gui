@@ -1,6 +1,7 @@
 package detector;
 
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.SystemUtils;
 
 import javax.imageio.ImageIO;
 import java.io.BufferedReader;
@@ -20,7 +21,9 @@ public class OpticDiscDetectorProcess implements OpticDiscDetector {
     }
 
     private List<String> processParameters(String filePath) {
-        final String programName = getClass().getResource("bin" + File.separator + "optic-disc-detector.exe").getFile();
+        final String programName = getClass().getResource(
+                "bin" + File.separator + "optic-disc-detector" + (SystemUtils.IS_OS_WINDOWS ? ".exe" : ""))
+                .getFile();
         final List<String> arguments =
                 new ProgramArguments(
                         ListUtils.sum(
