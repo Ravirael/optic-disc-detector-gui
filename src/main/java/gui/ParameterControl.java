@@ -32,9 +32,15 @@ public class ParameterControl extends HBox {
 
         label.setText(labelText);
         spinner.setValueFactory(valueFactory);
+
+        spinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                spinner.increment(0); // won't change value, but will commit editor
+            }
+        });
     }
 
     public ProgramArgument toProgramArgument() {
-        return new NumberProgramArgument<Double>(parameterName, spinner.getValue());
+        return new NumberProgramArgument<>(parameterName, spinner.getValueFactory().getValue());
     }
 }

@@ -7,31 +7,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-/**
- * Created by rames on 05.04.17.
- */
 public class OpticDiscDetectorProcess implements OpticDiscDetector {
     private final List<ProgramArgument> programArguments;
     private final File outputFile;
-    private final ExecutorService executorService;
 
-    public OpticDiscDetectorProcess(List<ProgramArgument> programArguments, ExecutorService executorService) throws IOException {
+    public OpticDiscDetectorProcess(List<ProgramArgument> programArguments) throws IOException {
         this.programArguments = programArguments;
-        this.executorService = executorService;
         this.outputFile = File.createTempFile("optic_disc_detection",".png");
-    }
-
-    @Override
-    public Future<DetectionResult> detect(String filePath) {
-        return executorService.submit(() -> detectImpl(filePath));
     }
 
     private List<String> processParameters(String filePath) {
@@ -52,9 +37,11 @@ public class OpticDiscDetectorProcess implements OpticDiscDetector {
         );
     }
 
-    private DetectionResult detectImpl(String filePath) {
+    @Override
+    public DetectionResult detect(String filePath) {
         try {
-            final Process process = new ProcessBuilder().command(processParameters(filePath)).start();
+            final List<String> arguments = processParameters(filePath);
+            final Process process = new ProcessBuilder().command(arguments).start();
             process.waitFor();
 
             if (process.exitValue() == 0) {

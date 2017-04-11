@@ -21,10 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class MainWindowController implements Initializable {
@@ -78,10 +75,9 @@ public class MainWindowController implements Initializable {
                     parameterControl
                             .stream()
                             .map(c -> c.toProgramArgument())
-                            .collect(Collectors.toList()),
-                    executorService
+                            .collect(Collectors.toList())
             );
-            final Future<DetectionResult> result = detector.detect(filePath);
+            final CompletableFuture<DetectionResult> result = CompletableFuture.supplyAsync(() -> detector.detect(filePath));
             result.get()
                     .image()
                     .map(i -> SwingFXUtils.toFXImage((BufferedImage)i, null))
@@ -106,6 +102,5 @@ public class MainWindowController implements Initializable {
         parametersView.getChildren().addAll(parameterControl);
         slider.valueProperty().addListener(x -> zoomChanged());
     }
-
-
+   
 }

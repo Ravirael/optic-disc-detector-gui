@@ -13,24 +13,15 @@ import org.junit.*;
  */
 public class OpticDiscDetectorProcessTest {
 
-    private ExecutorService executorService;
-
-
     private OpticDiscDetector createDetector(ProgramArgument... programArguments) throws IOException {
-        return new OpticDiscDetectorProcess(Arrays.asList(programArguments), executorService);
-    }
-
-
-    @Before
-    public void setup() {
-        executorService = Executors.newSingleThreadExecutor();
+        return new OpticDiscDetectorProcess(Arrays.asList(programArguments));
     }
 
     @Test(timeout = 10000)
     public void shouldProcessImageCorrectly() throws IOException, ExecutionException, InterruptedException {
         OpticDiscDetector detector = createDetector();
 
-        DetectionResult result = detector.detect(getClass().getResource("test_image.jpg").getFile()).get();
+        DetectionResult result = detector.detect(getClass().getResource("test_image.jpg").getFile());
 
         Assert.assertFalse(result.error().orElse(""), result.error().isPresent());
         Assert.assertTrue(result.image().isPresent());
@@ -40,7 +31,7 @@ public class OpticDiscDetectorProcessTest {
     public void shouldReturnErrorWithInvalidImageParameter() throws IOException, ExecutionException, InterruptedException {
         OpticDiscDetector detector = createDetector();
 
-        DetectionResult result = detector.detect("invalid_image_path.jpg").get();
+        DetectionResult result = detector.detect("invalid_image_path.jpg");
 
         Assert.assertTrue(result.error().isPresent());
         Assert.assertFalse(result.image().isPresent());
@@ -50,7 +41,7 @@ public class OpticDiscDetectorProcessTest {
     public void shouldReturnErrorWithInvalidParameter() throws IOException, ExecutionException, InterruptedException {
         OpticDiscDetector detector = createDetector(new NumberProgramArgument<Integer>("--invalidParameter", 0));
 
-        DetectionResult result = detector.detect("invalid_image_path.jpg").get();
+        DetectionResult result = detector.detect("invalid_image_path.jpg");
 
         Assert.assertTrue(result.error().isPresent());
         Assert.assertFalse(result.image().isPresent());

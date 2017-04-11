@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<fx:root prefHeight="28.0" prefWidth="286.0" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="28.0" prefWidth="286.0" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="label" prefHeight="27.0" prefWidth="161.0" text="Label" />
       <Region prefHeight="28.0" prefWidth="14.0" />
