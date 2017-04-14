@@ -1,7 +1,7 @@
-package gui;
+package pl.polsl.gui;
 
-import detector.NumberProgramArgument;
-import detector.ProgramArgument;
+import pl.polsl.detector.NumberProgramArgument;
+import pl.polsl.detector.ProgramArgument;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;

@@ -1,4 +1,4 @@
-package detector;
+package pl.polsl.detector;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +12,6 @@ public class NumberProgramArgumentTest {
     public void shouldCreateValidFloatingPointString() {
         final ProgramArgument programArgument = new NumberProgramArgument<Double>("--arg", 0.045);
 
-        Assert.assertEquals("--arg", programArgument.name());
         Assert.assertEquals("0.045", programArgument.value());
     }
 

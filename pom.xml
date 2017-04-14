@@ -7,6 +7,8 @@
     <groupId>pl.polsl</groupId>
     <artifactId>OpticDiscDetector</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
     <build>
         <plugins>
             <plugin>
@@ -23,10 +25,19 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>8.6.0</version>
                 <configuration>
-                    <mainClass></mainClass>
+                    <mainClass>pl.polsl.OpticDiscDetectorApplication</mainClass>
+                    <deployDir>${project.basedir}/src/main/resources</deployDir>
+                    <updateExistingJar>true</updateExistingJar>
+                    <allPermissions>true</allPermissions>
                 </configuration>
             </plugin>
         </plugins>
+        <!--<resources>-->
+            <!--<resource>-->
+                <!--<filtering>false</filtering>-->
+                <!--<directory>src/main/java/resources</directory>-->
+            <!--</resource>-->
+        <!--</resources>-->
     </build>
     <dependencies>
         <dependency>

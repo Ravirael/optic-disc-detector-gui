@@ -1,4 +1,4 @@
-package detector;
+package pl.polsl.detector;
 
 public class StringProgramArgument implements ProgramArgument {
     private final String name;

@@ -1,29 +1,27 @@
-package detector;
+package pl.polsl.detector;
 
+import javafx.scene.image.Image;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.SystemUtils;
 
 import javax.imageio.ImageIO;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
 public class OpticDiscDetectorProcess implements OpticDiscDetector {
+    private final String executablePath;
     private final List<ProgramArgument> programArguments;
     private final File outputFile;
 
-    public OpticDiscDetectorProcess(List<ProgramArgument> programArguments) throws IOException {
+    public OpticDiscDetectorProcess(String executablePath, List<ProgramArgument> programArguments) throws IOException {
+        this.executablePath = executablePath;
         this.programArguments = programArguments;
         this.outputFile = File.createTempFile("optic_disc_detection",".png");
     }
 
     private List<String> processParameters(String filePath) {
-        final String programName = getClass().getResource(
-                "bin" + File.separator + "optic-disc-detector" + (SystemUtils.IS_OS_WINDOWS ? ".exe" : ""))
-                .getFile();
+        final String programName = executablePath;
         final List<String> arguments =
                 new ProgramArguments(
                         ListUtils.sum(
@@ -41,15 +39,14 @@ public class OpticDiscDetectorProcess implements OpticDiscDetector {
     }
 
     @Override
-    public DetectionResult detect(String filePath) {
+    public Image detect(String filePath) throws FailedDetectionException {
         try {
             final List<String> arguments = processParameters(filePath);
             final Process process = new ProcessBuilder().command(arguments).start();
             process.waitFor();
 
             if (process.exitValue() == 0) {
-                final File outputImageFile = new File(outputFile.getAbsolutePath());
-                return new CorrectDetectionResult(ImageIO.read(outputImageFile));
+                return new Image(new FileInputStream(outputFile));
             } else {
                 final BufferedReader errorStreamReader = new BufferedReader(
                         new InputStreamReader(process.getErrorStream())
@@ -59,10 +56,12 @@ public class OpticDiscDetectorProcess implements OpticDiscDetector {
                         .lines()
                         .reduce("", (prev, current) -> prev + current);
 
-                return new InvalidDetectionResult(errorMessage);
+                throw new FailedDetectionException(errorMessage);
             }
         } catch (IOException | InterruptedException e) {
-            return new InvalidDetectionResult(e.getMessage());
+            throw new FailedDetectionException(e);
+        } finally {
+            outputFile.delete();
         }
     }
 }

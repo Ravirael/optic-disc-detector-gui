@@ -1,4 +1,4 @@
-package detector;
+package pl.polsl.detector;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

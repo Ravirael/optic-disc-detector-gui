@@ -1,4 +1,4 @@
-package gui;
+package pl.polsl.gui;
 
 import javafx.scene.control.SpinnerValueFactory;
 

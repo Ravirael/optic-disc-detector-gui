@@ -1,4 +1,4 @@
-/**
+package pl.polsl; /**
  * Created by rames on 05.04.17.
  */
 
@@ -7,9 +7,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pl.polsl.gui.ParametersResourceBundle;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
 
 public class OpticDiscDetectorApplication extends Application {
 
@@ -19,7 +22,10 @@ public class OpticDiscDetectorApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        final Parent root = FXMLLoader.load(getClass().getResource("gui" + File.separator + "MainWindow.fxml"));
+        final Parent root = FXMLLoader.load(
+                getClass().getResource("gui" + File.separator + "MainWindow.fxml"),
+                new ParametersResourceBundle(getParameters())
+        );
         final Scene scene = new Scene(root);
 
         stage.setScene(scene);

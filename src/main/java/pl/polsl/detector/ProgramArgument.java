@@ -1,4 +1,4 @@
-package detector;
+package pl.polsl.detector;
 
 /**
  * Created by rames on 05.04.17.

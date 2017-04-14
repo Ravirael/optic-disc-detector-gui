@@ -1,4 +1,4 @@
-package detector;
+package pl.polsl.detector;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
