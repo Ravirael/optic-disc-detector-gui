@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import javafx.scene.image.Image;
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.*;
 
 /**
@@ -13,7 +14,7 @@ import org.junit.*;
 public class OpticDiscDetectorProcessTest {
 
     private OpticDiscDetector createDetector(ProgramArgument... programArguments) throws IOException {
-        return new OpticDiscDetectorProcess(getClass().getResource("bin/optic-disc-detector").getFile(),
+        return new OpticDiscDetectorProcess(getClass().getResource("bin/optic-disc-detector" + (SystemUtils.IS_OS_WINDOWS ? ".exe" : "")).getFile(),
                 Arrays.asList(programArguments));
     }
 
