@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pl.polsl.gui.MainWindowController;
 import pl.polsl.gui.ParametersResourceBundle;
 
 import java.io.File;
@@ -23,7 +24,7 @@ public class OpticDiscDetectorApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         final Parent root = FXMLLoader.load(
-                getClass().getResource("gui" + File.separator + "MainWindow.fxml"),
+                MainWindowController.class.getResource("MainWindow.fxml"),
                 new ParametersResourceBundle(getParameters())
         );
         final Scene scene = new Scene(root);
