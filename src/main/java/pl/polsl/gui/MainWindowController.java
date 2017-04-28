@@ -35,16 +35,10 @@ public class MainWindowController implements Initializable {
     private List<ParameterControl> parameterControl;
 
     @FXML
-    private Slider slider;
-
-    @FXML
-    private ImageView imageView;
+    private ResizableImageView imageView;
 
     @FXML
     private VBox parametersView;
-
-    @FXML
-    private ScrollPane imageScrollPane;
 
     @FXML
     private ProgressIndicator progressIndicator;
@@ -60,6 +54,10 @@ public class MainWindowController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void calibrateImage() {
+        imageView.calibrate();
     }
 
     private void showError(String title, String message) {
@@ -79,17 +77,20 @@ public class MainWindowController implements Initializable {
     private void showOpenDialog(final ActionEvent event) {
         final FileChooser fileChooser = new ImageFileChooserFactory().create();
         final File file = fileChooser.showOpenDialog(null);
+
+        if (file == null) {
+            return;
+        }
+
         filePath = file.getAbsolutePath();
 
         try {
             final Image image = new Image(new FileInputStream(file));
             imageView.setImage(image);
-            //TODO: refactor
             if (image.isError()) {
                 showError("Cannot open image!", image.getException().getMessage());
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             showError("Cannot open image!", e.getMessage());
         }
     }
@@ -137,15 +138,9 @@ public class MainWindowController implements Initializable {
         }
     }
 
-    private void zoomChanged() {
-        final double scale = slider.getValue() / 100.0;
-        imageView.setScaleX(scale);
-        imageView.setScaleY(scale);
-    }
 
     public void initialize(URL location, ResourceBundle resources) {
         parametersView.getChildren().addAll(parameterControl);
-        slider.valueProperty().addListener(x -> zoomChanged());
 
         final Application.Parameters parameters = (Application.Parameters) resources.getObject("programArguments");
         final List<String> parametersList = parameters.getRaw();

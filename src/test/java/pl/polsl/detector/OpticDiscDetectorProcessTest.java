@@ -8,9 +8,7 @@ import javafx.scene.image.Image;
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.*;
 
-/**
- * Created by rames on 08.04.17.
- */
+
 public class OpticDiscDetectorProcessTest {
 
     private OpticDiscDetector createDetector(ProgramArgument... programArguments) throws IOException {
