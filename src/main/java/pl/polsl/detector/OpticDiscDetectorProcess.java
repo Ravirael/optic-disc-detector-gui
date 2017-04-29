@@ -2,9 +2,7 @@ package pl.polsl.detector;
 
 import javafx.scene.image.Image;
 import org.apache.commons.collections4.ListUtils;
-import org.apache.commons.lang3.SystemUtils;
 
-import javax.imageio.ImageIO;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +19,6 @@ public class OpticDiscDetectorProcess implements OpticDiscDetector {
     }
 
     private List<String> processParameters(String filePath) {
-        final String programName = executablePath;
         final List<String> arguments =
                 new ProgramArguments(
                         ListUtils.sum(
@@ -33,7 +30,7 @@ public class OpticDiscDetectorProcess implements OpticDiscDetector {
                         )
                 );
         return ListUtils.sum(
-                Arrays.asList(programName),
+                Arrays.asList(executablePath),
                 arguments
         );
     }

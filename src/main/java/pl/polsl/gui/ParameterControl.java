@@ -11,14 +11,16 @@ import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 
-public class ParameterControl extends HBox {
+class ParameterControl extends HBox {
     private final String parameterName;
+    @SuppressWarnings("unused")
     @FXML
     private Spinner<Double> spinner;
+    @SuppressWarnings("unused")
     @FXML
     private Label label;
 
-    public ParameterControl(String labelText, String parameterName, SpinnerValueFactory valueFactory) {
+    public ParameterControl(String labelText, String parameterName, SpinnerValueFactory<Double> valueFactory) {
         super();
         this.parameterName = parameterName;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ParameterControl.fxml"));

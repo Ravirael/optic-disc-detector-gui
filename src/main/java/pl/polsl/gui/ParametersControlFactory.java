@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-public class ParametersControlFactory {
+class ParametersControlFactory {
 
     private final InputStream stream;
 
@@ -24,6 +24,6 @@ public class ParametersControlFactory {
                     objectMapper.readValue(stream, ParameterControlBuilder[].class)
                 );
 
-        return builders.stream().map(b -> b.build()).collect(Collectors.toList());
+        return builders.stream().map(ParameterControlBuilder::build).collect(Collectors.toList());
     }
 }

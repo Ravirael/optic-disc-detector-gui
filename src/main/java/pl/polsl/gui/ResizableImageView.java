@@ -11,18 +11,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ResizableImageView extends HBox {
-    private final double spaceFactor = 1;
-
+    @SuppressWarnings("unused")
     @FXML
     private Slider slider;
 
+    @SuppressWarnings("unused")
     @FXML
     private ImageView imageView;
 
+    @SuppressWarnings("unused")
     @FXML
     private ScrollPane imageScrollPane;
 
@@ -40,13 +39,10 @@ public class ResizableImageView extends HBox {
         slider.valueProperty().addListener(x -> calibrate());
         this.widthProperty().addListener(c -> calibrate());
         this.heightProperty().addListener(c -> calibrate());
-        this.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-                    if(mouseEvent.getClickCount() == 2){
-                        calibrate();
-                    }
+        this.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                if(mouseEvent.getClickCount() == 2){
+                    calibrate();
                 }
             }
         });
@@ -57,7 +53,7 @@ public class ResizableImageView extends HBox {
         calibrate();
     }
 
-    public void calibrate() {
+    private void calibrate() {
         if (imageView.getImage() == null) {
             return;
         }
@@ -68,7 +64,7 @@ public class ResizableImageView extends HBox {
         final double imageAspectRatio = imageView.getImage().getWidth()
                 / imageView.getImage().getHeight();
 
-        final double scaleFactor = spaceFactor * slider.getValue() / 100.0;
+        final double scaleFactor = slider.getValue() / 100.0;
 
         if (imageAspectRatio > paneAspectRatio) {
             System.out.println("Scaling to width");

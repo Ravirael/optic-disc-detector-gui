@@ -5,24 +5,17 @@ import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import org.apache.commons.lang3.SystemUtils;
-import pl.polsl.detector.DetectionResult;
 import pl.polsl.detector.FailedDetectionException;
 import pl.polsl.detector.OpticDiscDetector;
 import pl.polsl.detector.OpticDiscDetectorProcess;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -56,10 +49,6 @@ public class MainWindowController implements Initializable {
         }
     }
 
-    public void calibrateImage() {
-        imageView.calibrate();
-    }
-
     private void showError(String title, String message) {
         final Alert alert = new Alert(Alert.AlertType.ERROR);
         alert
@@ -85,12 +74,8 @@ public class MainWindowController implements Initializable {
         filePath = file.getAbsolutePath();
 
         try {
-            final Image image = new Image(new FileInputStream(file));
-            imageView.setImage(image);
-            if (image.isError()) {
-                showError("Cannot open image!", image.getException().getMessage());
-            }
-        } catch (FileNotFoundException e) {
+            setImage(new CorrectImageFileReader().load(file));
+        } catch (ImageLoadingException e) {
             showError("Cannot open image!", e.getMessage());
         }
     }
@@ -99,13 +84,7 @@ public class MainWindowController implements Initializable {
     private void processImage(final ActionEvent event) {
         try {
             progressIndicator.setVisible(true);
-            final OpticDiscDetector detector = new OpticDiscDetectorProcess(
-                    detectorExecutablePath,
-                    parameterControl
-                            .stream()
-                            .map(c -> c.toProgramArgument())
-                            .collect(Collectors.toList())
-            );
+            final OpticDiscDetector detector = createDetector();
             
             final CompletableFuture<Image> result = CompletableFuture
                     .supplyAsync(() -> {
@@ -117,12 +96,7 @@ public class MainWindowController implements Initializable {
                     });
 
             result
-                .thenAccept(
-                        detectionResult -> {
-                            imageView.setImage(detectionResult);
-                            progressIndicator.setVisible(false);
-                        }
-                )
+                .thenAccept(this::setImage)
                 .exceptionally((ex) -> {
                     Platform.runLater(() -> {
                         showError("Cannot process image!", ex.getCause().getMessage());
@@ -138,16 +112,31 @@ public class MainWindowController implements Initializable {
         }
     }
 
+    private void setImage(Image image) {
+        imageView.setImage(image);
+        progressIndicator.setVisible(false);
+    }
+
+    private OpticDiscDetectorProcess createDetector() throws IOException {
+        return new OpticDiscDetectorProcess(
+                detectorExecutablePath,
+                parameterControl
+                        .stream()
+                        .map(ParameterControl::toProgramArgument)
+                        .collect(Collectors.toList())
+        );
+    }
 
     public void initialize(URL location, ResourceBundle resources) {
-        parametersView.getChildren().addAll(parameterControl);
-
         final Application.Parameters parameters = (Application.Parameters) resources.getObject("programArguments");
         final List<String> parametersList = parameters.getRaw();
+
         detectorExecutablePath =
                 parametersList.size() > 0 ?
                 parametersList.get(0) :
                 "optic-disc-detector" + (SystemUtils.IS_OS_WINDOWS ? ".exe" : "");
+
+        parametersView.getChildren().addAll(parameterControl);
     }
    
 }

@@ -4,9 +4,6 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
-/**
- * Created by rames on 05.04.17.
- */
 public class ImageFileChooserFactory implements FileChooserFactory {
     public FileChooser create() {
         final FileChooser fileChooser = new FileChooser();

@@ -33,7 +33,7 @@ public class OpticDiscDetectorProcessTest {
 
     @Test(timeout = 10000, expected = FailedDetectionException.class)
     public void shouldThrowWithInvalidParameter() throws IOException, ExecutionException, InterruptedException, FailedDetectionException {
-        final OpticDiscDetector detector = createDetector(new NumberProgramArgument<Integer>("--invalidParameter", 0));
+        final OpticDiscDetector detector = createDetector(new NumberProgramArgument<>("--invalidParameter", 0));
         detector.detect("test_image.jpg");
     }
 }

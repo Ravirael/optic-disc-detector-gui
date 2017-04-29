@@ -2,9 +2,6 @@ package pl.polsl.gui;
 
 import javafx.stage.FileChooser;
 
-/**
- * Created by rames on 05.04.17.
- */
-public interface FileChooserFactory {
+interface FileChooserFactory {
     FileChooser create();
 }
