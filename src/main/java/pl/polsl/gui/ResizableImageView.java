@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 
 import java.io.IOException;
 
@@ -46,6 +47,10 @@ public class ResizableImageView extends HBox {
                 }
             }
         });
+    }
+
+    public Image getImage() {
+        return imageView.getImage();
     }
 
     public void setImage(Image image) {

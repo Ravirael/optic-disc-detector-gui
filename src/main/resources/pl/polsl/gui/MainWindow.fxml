@@ -9,7 +9,7 @@
     <MenuBar>
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#showOpenDialog" text="Open"/>
-            <MenuItem mnemonicParsing="false" text="Save"/>
+            <MenuItem mnemonicParsing="false" onAction="#saveCurrentImage" text="Save"/>
         </Menu>
     </MenuBar>
     <BorderPane prefHeight="4000.0" prefWidth="4000.0">

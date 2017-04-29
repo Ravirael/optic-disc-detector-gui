@@ -2,8 +2,10 @@ package pl.polsl.gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
 import pl.polsl.detector.FailedDetectionException;
 import pl.polsl.detector.OpticDiscDetector;
@@ -15,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -37,6 +40,8 @@ public class MainWindowController implements Initializable {
     private ProgressIndicator progressIndicator;
 
     private String filePath;
+    private final FileChooser imageFileChooser;
+
 
     public MainWindowController() {
         try {
@@ -47,6 +52,8 @@ public class MainWindowController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.imageFileChooser = new ImageFileChooserFactory().create();
     }
 
     private void showError(String title, String message) {
@@ -64,28 +71,51 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void showOpenDialog(final ActionEvent event) {
-        final FileChooser fileChooser = new ImageFileChooserFactory().create();
-        final File file = fileChooser.showOpenDialog(null);
+        final File file = imageFileChooser.showOpenDialog(null);
 
-        if (file == null) {
-            return;
+        if (file != null) {
+            try {
+                setImage(new CorrectImageFileReader().load(file));
+                filePath = file.getAbsolutePath();
+                imageFileChooser.setInitialDirectory(file.toPath().getParent().toFile());
+            } catch (ImageLoadingException e) {
+                showError("Cannot open image!", e.getMessage());
+            }
         }
+    }
 
-        filePath = file.getAbsolutePath();
+    @FXML
+    private void saveCurrentImage(final ActionEvent event) {
+        final String extension = "png";
+        final Image image = imageView.getImage();
 
-        try {
-            setImage(new CorrectImageFileReader().load(file));
-        } catch (ImageLoadingException e) {
-            showError("Cannot open image!", e.getMessage());
+        if (image != null) {
+            final File file = new File(
+                    imageFileChooser.showSaveDialog(null).getAbsolutePath()
+                            + "."
+                            + extension
+            );
+
+            if (file != null) {
+                try {
+                    ImageIO.write(
+                            SwingFXUtils.fromFXImage(image, null),
+                            extension,
+                            file
+                    );
+                } catch (IOException e) {
+                    showError("Cannot save image!", e.getMessage());
+                }
+            }
         }
     }
 
     @FXML
     private void processImage(final ActionEvent event) {
         try {
-            progressIndicator.setVisible(true);
             final OpticDiscDetector detector = createDetector();
-            
+            progressIndicator.setVisible(true);
+
             final CompletableFuture<Image> result = CompletableFuture
                     .supplyAsync(() -> {
                         try {
@@ -106,8 +136,6 @@ public class MainWindowController implements Initializable {
                 });
 
         } catch (IOException | RuntimeException e) {
-            progressIndicator.setVisible(false);
-            e.printStackTrace();
             showError("Cannot process image!", e.getMessage());
         }
     }
