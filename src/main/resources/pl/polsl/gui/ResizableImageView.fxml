@@ -11,12 +11,10 @@
             orientation="VERTICAL" value="100.0"/>
     <ScrollPane fx:id="imageScrollPane" fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="10000.0"
                 prefWidth="10000.0">
-        <content>
-         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-             <children>
-                 <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true"/>
-             </children>
-         </HBox>
-        </content>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true"/>
+            </children>
+        </HBox>
     </ScrollPane>
 </fx:root>

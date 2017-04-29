@@ -5,12 +5,10 @@ import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
 import pl.polsl.detector.FailedDetectionException;
 import pl.polsl.detector.OpticDiscDetector;
 import pl.polsl.detector.OpticDiscDetectorProcess;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
@@ -70,7 +68,7 @@ public class MainWindowController implements Initializable {
     }
 
     @FXML
-    private void showOpenDialog(final ActionEvent event) {
+    private void showOpenDialog() {
         final File file = imageFileChooser.showOpenDialog(null);
 
         if (file != null) {
@@ -85,7 +83,7 @@ public class MainWindowController implements Initializable {
     }
 
     @FXML
-    private void saveCurrentImage(final ActionEvent event) {
+    private void saveCurrentImage() {
         final String extension = "png";
         final Image image = imageView.getImage();
 
@@ -96,22 +94,20 @@ public class MainWindowController implements Initializable {
                             + extension
             );
 
-            if (file != null) {
-                try {
-                    ImageIO.write(
-                            SwingFXUtils.fromFXImage(image, null),
-                            extension,
-                            file
-                    );
-                } catch (IOException e) {
-                    showError("Cannot save image!", e.getMessage());
-                }
+            try {
+                ImageIO.write(
+                        SwingFXUtils.fromFXImage(image, null),
+                        extension,
+                        file
+                );
+            } catch (IOException e) {
+                showError("Cannot save image!", e.getMessage());
             }
         }
     }
 
     @FXML
-    private void processImage(final ActionEvent event) {
+    private void processImage() {
         try {
             final OpticDiscDetector detector = createDetector();
             progressIndicator.setVisible(true);

@@ -58,6 +58,7 @@ public class OpticDiscDetectorProcess implements OpticDiscDetector {
         } catch (IOException | InterruptedException e) {
             throw new FailedDetectionException(e);
         } finally {
+            //noinspection ResultOfMethodCallIgnored
             outputFile.delete();
         }
     }

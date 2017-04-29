@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 class ParametersControlFactory {
-
     private final InputStream stream;
 
     public ParametersControlFactory(InputStream file) {
