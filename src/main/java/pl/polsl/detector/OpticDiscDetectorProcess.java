@@ -1,5 +1,7 @@
 package pl.polsl.detector;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.image.Image;
 import org.apache.commons.collections4.ListUtils;
 
@@ -36,14 +38,21 @@ public class OpticDiscDetectorProcess implements OpticDiscDetector {
     }
 
     @Override
-    public Image detect(String filePath) throws FailedDetectionException {
+    public DetectionResult detect(String filePath) throws FailedDetectionException {
         try {
             final List<String> arguments = processParameters(filePath);
             final Process process = new ProcessBuilder().command(arguments).start();
             process.waitFor();
 
+            final BufferedReader outputStreamReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream())
+            );
+
             if (process.exitValue() == 0) {
-                return new Image(new FileInputStream(outputFile));
+                return DetectionResult.create(
+                        new Image(new FileInputStream(outputFile)),
+                        readCircle(outputStreamReader)
+                );
             } else {
                 final BufferedReader errorStreamReader = new BufferedReader(
                         new InputStreamReader(process.getErrorStream())
@@ -61,5 +70,12 @@ public class OpticDiscDetectorProcess implements OpticDiscDetector {
             //noinspection ResultOfMethodCallIgnored
             outputFile.delete();
         }
+    }
+
+    private Circle readCircle(BufferedReader streamReader) throws IOException {
+        final ObjectMapper mapper = new ObjectMapper();
+        final JsonNode node = mapper.readTree(streamReader).get("circle");
+
+        return mapper.treeToValue(node, Circle.class);
     }
 }

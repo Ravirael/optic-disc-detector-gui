@@ -6,9 +6,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.*;
 import javafx.scene.layout.Region;
 import org.apache.commons.lang3.SystemUtils;
-import pl.polsl.detector.FailedDetectionException;
-import pl.polsl.detector.OpticDiscDetector;
-import pl.polsl.detector.OpticDiscDetectorProcess;
+import pl.polsl.detector.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
@@ -36,6 +34,18 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private ProgressIndicator progressIndicator;
+
+    @FXML
+    private Label xLabel;
+
+    @FXML
+    private Label yLabel;
+
+    @FXML
+    private Label radiusLabel;
+
+    @FXML
+    private TitledPane circleView;
 
     private String filePath;
     private final FileChooser imageFileChooser;
@@ -76,10 +86,18 @@ public class MainWindowController implements Initializable {
                 setImage(new CorrectImageFileReader().load(file));
                 filePath = file.getAbsolutePath();
                 imageFileChooser.setInitialDirectory(file.toPath().getParent().toFile());
+                clearLabels();
             } catch (ImageLoadingException e) {
                 showError("Cannot open image!", e.getMessage());
             }
         }
+    }
+
+    private void clearLabels() {
+        xLabel.setText("");
+        yLabel.setText("");
+        radiusLabel.setText("");
+        circleView.setVisible(false);
     }
 
     @FXML
@@ -112,7 +130,7 @@ public class MainWindowController implements Initializable {
             final OpticDiscDetector detector = createDetector();
             progressIndicator.setVisible(true);
 
-            final CompletableFuture<Image> result = CompletableFuture
+            final CompletableFuture<DetectionResult> result = CompletableFuture
                     .supplyAsync(() -> {
                         try {
                             return detector.detect(filePath);
@@ -122,7 +140,12 @@ public class MainWindowController implements Initializable {
                     });
 
             result
-                .thenAccept(this::setImage)
+                .thenAccept(r -> {
+                    Platform.runLater(() -> {
+                        setImage(r.getImage());
+                        displayCircleParams(r.getCircle());
+                    });
+                })
                 .exceptionally((ex) -> {
                     Platform.runLater(() -> {
                         showError("Cannot process image!", ex.getCause().getMessage());
@@ -134,6 +157,13 @@ public class MainWindowController implements Initializable {
         } catch (IOException | RuntimeException e) {
             showError("Cannot process image!", e.getMessage());
         }
+    }
+
+    private void displayCircleParams(Circle circle) {
+        xLabel.setText("x: " + Integer.toString(circle.getCenter().getX()));
+        yLabel.setText("y: " + Integer.toString(circle.getCenter().getY()));
+        radiusLabel.setText("radius: " + Integer.toString(circle.getRadius()));
+        circleView.setVisible(true);
     }
 
     private void setImage(Image image) {

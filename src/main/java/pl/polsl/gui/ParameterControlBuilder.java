@@ -1,6 +1,10 @@
 package pl.polsl.gui;
 
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.util.StringConverter;
+
+import java.text.DecimalFormat;
+import java.text.ParseException;
 
 class ParameterControlBuilder {
     private double min;
@@ -41,8 +45,43 @@ class ParameterControlBuilder {
     }
 
     ParameterControl build() {
+        SpinnerValueFactory<Double> factory = new SpinnerValueFactory.DoubleSpinnerValueFactory(min, max, value, step);
+
+        factory.setConverter(new StringConverter<Double>() {
+            private final DecimalFormat df = new DecimalFormat("#.###");
+
+            @Override public String toString(Double value) {
+                // If the specified value is null, return a zero-length String
+                if (value == null) {
+                    return "";
+                }
+
+                return df.format(value);
+            }
+
+            @Override public Double fromString(String value) {
+                try {
+                    // If the specified value is null or zero-length, return null
+                    if (value == null) {
+                        return null;
+                    }
+
+                    value = value.trim();
+
+                    if (value.length() < 1) {
+                        return null;
+                    }
+
+                    // Perform the requested parsing
+                    return df.parse(value).doubleValue();
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
         return new ParameterControl(label, name,
-                    new SpinnerValueFactory.DoubleSpinnerValueFactory(min, max, value, step)
+                    factory
                 );
     }
 }

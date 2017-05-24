@@ -12,7 +12,7 @@ public class ImageFileChooserFactory implements FileChooserFactory {
                 "*.JPG", "*.jpg", "*.PNG", "*.png", "*.jpg", "*.JPG"
         );
         fileChooser.getExtensionFilters().addAll(filter);
-        fileChooser.setTitle("Choose image!");
+        fileChooser.setTitle("Image");
         fileChooser.setInitialDirectory(
                 new File(System.getProperty("user.home"))
         );
